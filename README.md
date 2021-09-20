@@ -26,5 +26,5 @@ Diantara metode pembayaran yang akan disupport antara lain:
     -e PGDATA=/var/lib/postgresql/data/pgdata \
     -v "$PWD/invoicedb-data:/var/lib/postgresql/data" \
     -p 5432:5432 \
-    postgres:13
+    postgres:12
    ```
