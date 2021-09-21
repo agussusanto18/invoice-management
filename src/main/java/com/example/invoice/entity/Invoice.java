@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@SQLDelete(sql = "UPDATE table invoice SET status_record = 'INACTIVE' WHERE id=?")
+@SQLDelete(sql = "UPDATE invoice SET status_record = 'INACTIVE' WHERE id=?")
 @Where(clause = "status_record='ACTIVE'")
 public class Invoice extends BaseEntity{
 

@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@SQLDelete(sql = "UPDATE table invoice_type SET status_record = 'INACTIVE' WHERE id=?")
+@SQLDelete(sql = "UPDATE invoice_type SET status_record='INACTIVE' WHERE id=?")
 @Where(clause = "status_record='ACTIVE'")
 public class InvoiceType extends BaseEntity{
 

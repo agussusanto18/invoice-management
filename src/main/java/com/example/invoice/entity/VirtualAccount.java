@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
-@SQLDelete(sql = "UPDATE table virtual_account SET status_record = 'INACTIVE' WHERE id=?")
+@SQLDelete(sql = "UPDATE virtual_account SET status_record = 'INACTIVE' WHERE id=?")
 @Where(clause = "status_record='ACTIVE'")
 public class VirtualAccount extends BaseEntity{
 

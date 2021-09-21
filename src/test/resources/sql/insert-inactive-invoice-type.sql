@@ -1,0 +1,3 @@
+insert into invoice_type (id, code, name, created, created_by, updated, updated_by, status_record) values ('test-001', 'T001', 'test 001', '2021-09-21 12:30:54.200', 'Test User', '2021-09-22 12:30:54.200', 'Test User', 'INACTIVE');
+
+insert into invoice_type (id, code, name, created, created_by, updated, updated_by, status_record) values ('test-002', 'T002', 'test 002', '2021-09-21 12:30:54.200', 'Test User', '2021-09-22 12:30:54.200', 'Test User', 'ACTIVE');
