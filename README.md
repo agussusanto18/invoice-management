@@ -15,6 +15,27 @@ Diantara metode pembayaran yang akan disupport antara lain:
 * QR Payment
   * QRIS
 
+
+Tipe tagihan yang tersedia:
+
+  * CLOSED : Membayar sesuai nominal, jika tidak sesuai ditolak
+  * OPEN : Pembayaran berapapun diterima
+  * INSTALLMENT : Pembayaran diterima selama total akumulasi lebih kecil atau sama dengan nominal
+
+
+Fitur aplikasi:
+  
+  * Managemen debitur
+    * Registrasi debitur
+    * Rekap tagihan debitur
+    * History pembayaran
+
+  * Managemen invoice
+    * Membuat invoice
+    * Mengganti nilai dan tanggal jatuh tempo
+    * Membatalkan invoice
+
+
 # Setup Database #
 1. Jalankan postgresql di docker
   ```
