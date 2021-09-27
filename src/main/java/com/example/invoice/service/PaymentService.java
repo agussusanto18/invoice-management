@@ -3,6 +3,7 @@ package com.example.invoice.service;
 import com.example.invoice.dao.VirtualAccountDao;
 import com.example.invoice.entity.PaymentProvider;
 import com.example.invoice.entity.VirtualAccount;
+import com.example.invoice.exception.PaymentExceedInvoiceAmountException;
 import com.example.invoice.exception.VirtualAccountAlreadyPaidException;
 import com.example.invoice.exception.VirtualAccountNotFoundException;
 import com.example.invoice.helper.VirtualAccountHelper;
@@ -14,23 +15,32 @@ import java.util.Optional;
 
 
 @Service
-@Transactional
+@Transactional(rollbackOn = {
+        VirtualAccountAlreadyPaidException.class,
+        VirtualAccountNotFoundException.class,
+        PaymentExceedInvoiceAmountException.class
+})
 public class PaymentService {
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     @Autowired
     private VirtualAccountDao virtualAccountDao;
 
-    public void pay(PaymentProvider provider, String companyId, String accountNumber, BigDecimal amount, String reference) throws VirtualAccountNotFoundException, VirtualAccountAlreadyPaidException {
-        VirtualAccount va = VirtualAccountHelper.checkVaIsExist(virtualAccountDao, provider, companyId, accountNumber);
-        checkVaIsPaid(provider, companyId, accountNumber, va);
-    }
+    @Autowired
+    private VirtualAccountHelper virtualAccountHelper;
 
-    private void checkVaIsPaid(PaymentProvider provider, String companyId, String accountNumber, VirtualAccount va) throws VirtualAccountAlreadyPaidException {
-        if (va.getInvoice().getPaid()) {
-            throw new VirtualAccountAlreadyPaidException( "VA ["+ companyId +"/"+ accountNumber +"-"+ provider.getCode()  +"] already paid" );
-        }
-    }
+    public void pay(PaymentProvider provider, String companyId, String accountNumber, BigDecimal amount, String reference) throws VirtualAccountNotFoundException, VirtualAccountAlreadyPaidException, PaymentExceedInvoiceAmountException {
+        auditLogService.log("Start payment VA " + accountNumber);
 
+        // 1. Mengecek apakah VA ada
+        VirtualAccount va = virtualAccountHelper.checkVaIsExist(provider, companyId, accountNumber);
+        // 2. Mengecek apakah VA sudah lunas
+        virtualAccountHelper.checkVaAlreadyPaid(va);
+        // 3. Mengecek apakah amount pembayaran > nilai tagihan
+        virtualAccountHelper.checkIsPaymentAmountExceedInvoice(amount, va);
+    }
 
 
 }
