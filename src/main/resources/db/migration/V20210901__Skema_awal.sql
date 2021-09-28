@@ -1,3 +1,13 @@
+CREATE TABLE activity_log (
+    id character varying(255) NOT NULL,
+    feature character varying(255) NOT NULL,
+    activity_time timestamp without time zone NOT NULL,
+    message character varying(255) NOT NULL
+);
+
+ALTER TABLE ONLY activity_log
+    ADD CONSTRAINT activity_log_pkey PRIMARY KEY (id);
+
 CREATE TABLE running_number (
     id character varying(36) NOT NULL,
     prefix character varying(100) NOT NULL,

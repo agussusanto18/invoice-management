@@ -1,5 +1,6 @@
 package com.example.invoice.dao;
 
+import com.example.invoice.entity.Invoice;
 import com.example.invoice.entity.Payment;
 import com.example.invoice.entity.PaymentProvider;
 import com.example.invoice.entity.VirtualAccount;
@@ -11,4 +12,5 @@ public interface VirtualAccountDao extends PagingAndSortingRepository<VirtualAcc
 
     Optional<VirtualAccount> findByPaymentProviderAndCompanyIdAndAccountNumber(PaymentProvider provider, String companyId, String accountNumber);
 
+    Iterable<VirtualAccount> findByInvoice(Invoice invoice);
 }
