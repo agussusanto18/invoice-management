@@ -13,23 +13,23 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Service
-@Transactional
+@Service @Transactional
 public class InvoiceService {
 
-    @Autowired private InvoiceDao invoiceDao;
-    @Autowired private InvoiceTypeDao invoiceTypeDao;
-    @Autowired private VirtualAccountDao virtualAccountDao;
+    @Autowired InvoiceDao invoiceDao;
+    @Autowired InvoiceTypeDao invoiceTypeDao;
+    @Autowired VirtualAccountDao virtualAccountDao;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InvoiceService.class);
 
     public Invoice createInvoice(Customer customer, InvoiceType invoiceType, String description, BigDecimal amount) {
+
         InvoiceType it = invoiceTypeDao.findById(invoiceType.getId())
                 .orElseThrow(() -> new IllegalStateException("Invoice type " +invoiceType.getId() + "is not found"));
 
         Invoice invoice = new Invoice();
         invoice.setCustomer(customer);
-        invoice.setInvoiceType(it);
+        invoice.setInvoiceType(invoiceType);
         invoice.setDescription(description);
         invoice.setAmount(amount);
         invoice.setDueDate(LocalDateTime.now().plusMonths(1));
@@ -41,11 +41,16 @@ public class InvoiceService {
                 invoice.getInvoiceNumber(),
                 invoice.getCustomer().getCode());
 
-        for (VirtualAccountConfiguration vaConfig : it.getVirtualAccountConfigurations()) {
+        for (VirtualAccountConfiguration vaConfig : it.getVirtualAccountConfigurations()){
             VirtualAccount va = new VirtualAccount();
+            va.setVirtualAccountConfiguration(vaConfig);
+            va.setInvoice(invoice);
+            va.setCompanyId(vaConfig.getCompanyPrefix());
+            va.setPaymentProvider(vaConfig.getPaymentProvider());
+            va.setAccountNumber(vaConfig.getCompanyPrefix() + invoice.getCustomer().getMobilePhone());
+            virtualAccountDao.save(va);
         }
 
         return invoice;
     }
-
 }

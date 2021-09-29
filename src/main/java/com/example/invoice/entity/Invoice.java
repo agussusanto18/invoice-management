@@ -30,7 +30,7 @@ public class Invoice extends BaseEntity{
     private InvoiceType invoiceType;
 
     @NotNull @NotEmpty @Size(min = 3, max = 100)
-    private String invoiceNumber;
+    private String invoiceNumber = "0123456";
 
     @NotNull
     private LocalDateTime dueDate;

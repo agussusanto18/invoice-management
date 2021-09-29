@@ -199,8 +199,6 @@ ALTER TABLE ONLY payment
     ADD CONSTRAINT fkptriq88d7e8io9mhri8p10cq0 FOREIGN KEY (id_virtual_account) REFERENCES virtual_account(id);
 
 
-
-
 CREATE TABLE invoice_type_provider (
     id_invoice_type character varying(36) NOT NULL,
     id_payment_provider character varying(36) NOT NULL
