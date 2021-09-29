@@ -8,7 +8,7 @@ import javax.persistence.LockModeType;
 
 public interface RunningNumberDao extends CrudRepository<RunningNumber, String> {
 
-//    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     RunningNumber findByPrefix(String prefix);
 
 }

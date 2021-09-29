@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootTest
@@ -33,6 +34,12 @@ public class RunningNumberServiceTest {
             Thread t = new Thread() {
                 @Override
                 public void run() {
+                    try {
+                        Thread.sleep(Math.abs(new Random().nextInt(100) * 100));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     for (int j = 0; j < iteration; j++) {
                         List<Long> lastNumber = (List<Long>) resultMap.get(this.getId());
                         if (lastNumber == null) {
@@ -40,6 +47,7 @@ public class RunningNumberServiceTest {
                         }
 
                         Long result = runningNumberService.getNumber("test");
+                        System.out.println("Thread ["+ this.getId() +"] Last = " + result);
                         lastNumber.add(result);
                         resultMap.put(this.getId(), lastNumber);
                     }
@@ -48,7 +56,7 @@ public class RunningNumberServiceTest {
             t.start();
         }
 
-        Thread.sleep(10 + 1000);
+        Thread.sleep(10 * 1000);
         Enumeration<Long> keys = resultMap.keys();
         while (keys.hasMoreElements()) {
             Long key = keys.nextElement();

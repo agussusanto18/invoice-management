@@ -4,10 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,6 +23,10 @@ public class InvoiceType extends BaseEntity{
     @NotNull @NotEmpty @Size(min = 3, max = 100)
     private String name;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType = PaymentType.OPEN;
+
     @ManyToMany
     @JoinTable(
             name = "invoice_type_provider",
@@ -33,4 +34,13 @@ public class InvoiceType extends BaseEntity{
             inverseJoinColumns = @JoinColumn(name = "id_payment_provider")
     )
     private Set<PaymentProvider> paymentProviders = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "invoice_type_configuration",
+            joinColumns = @JoinColumn(name = "id_invoice_type"),
+            inverseJoinColumns = @JoinColumn(name = "id_virtual_account_configuration")
+    )
+    private Set<VirtualAccountConfiguration> virtualAccountConfigurations = new HashSet<>();
+
 }

@@ -15,11 +15,11 @@ public class AuditLogService {
         ActivityLogDao activityLogDao;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
-        public void log(String log) {
-                ActivityLog activityLog = new ActivityLog();
-                activityLog.setFeature(Feature.PAYMENT);
-                activityLog.setMessage(log);
-                activityLogDao.save(activityLog);
+        public void log(String logMessage) {
+                ActivityLog log = new ActivityLog();
+                log.setFeature(Feature.PAYMENT);
+                log.setMessage(logMessage);
+                activityLogDao.save(log);
         }
 
 }
