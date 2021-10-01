@@ -1,8 +1,10 @@
 package com.example.invoice.helper;
 
+import com.example.invoice.dao.InvoiceDao;
 import com.example.invoice.dao.VirtualAccountDao;
 import com.example.invoice.entity.Invoice;
 import com.example.invoice.entity.PaymentProvider;
+import com.example.invoice.entity.PaymentStatus;
 import com.example.invoice.entity.VirtualAccount;
 import com.example.invoice.exception.PaymentExceedInvoiceAmountException;
 import com.example.invoice.exception.VirtualAccountAlreadyPaidException;
@@ -18,6 +20,9 @@ public class VirtualAccountHelper {
 
     @Autowired
     private VirtualAccountDao virtualAccountDao;
+
+    @Autowired
+    private InvoiceDao invoiceDao;
 
     public VirtualAccount checkVaIsExist(PaymentProvider provider, String companyId, String accountNumber) throws VirtualAccountNotFoundException {
         Optional<VirtualAccount> opVa = virtualAccountDao.findByPaymentProviderAndCompanyIdAndAccountNumber(
@@ -36,12 +41,5 @@ public class VirtualAccountHelper {
             throw new VirtualAccountAlreadyPaidException( "VA ["+ va.getCompanyId() +"/"+ va.getAccountNumber() +"-"+ va.getPaymentProvider().getCode() +"] already paid" );
         }
     }
-
-    public void checkIsPaymentAmountExceedInvoice(BigDecimal amount, VirtualAccount va) throws PaymentExceedInvoiceAmountException {
-        if (va.getInvoice().getAmount().compareTo(amount) == -1) {
-            throw new PaymentExceedInvoiceAmountException("Jumlah bayar melebihi jumlah tagihan !");
-        }
-    }
-
 
 }
